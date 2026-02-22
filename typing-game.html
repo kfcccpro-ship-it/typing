@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPOP & GAME Typing Master</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a28;
+    --panel: #12121e;
+    --border: #2a2a45;
+    --accent: #ff5f5f;
+    --accent2: #ff9d3d;
+    --neon: #00f5ff;
+    --neon2: #b347ff;
+    --green: #39ff89;
+    --text: #e8e8f0;
+    --muted: #6060a0;
+    --gold: #ffd700;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID LAYOUT */
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: 60px 1fr 80px;
+    height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: relative;
+    z-index: 10;
+  }
+  .topbar::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--neon2), var(--neon), var(--accent2));
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 18px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+
+  .lang-switch {
+    display: flex;
+    gap: 4px;
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .lang-switch-btn {
+    padding: 6px 18px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-switch-btn.active {
+    background: var(--neon);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 0 14px rgba(0,245,255,0.5);
+  }
+
+  .mode-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  .mode-tab {
+    padding: 6px 20px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .mode-tab.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 16px rgba(255,95,95,0.5);
+  }
+
+  .lang-toggle {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    background: var(--bg3);
+    border-radius: 20px;
+    padding: 4px 6px;
+  }
+  .lang-btn {
+    padding: 4px 14px;
+    border-radius: 16px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .lang-btn.active {
+    background: var(--neon2);
+    color: white;
+    box-shadow: 0 0 12px rgba(179,71,255,0.5);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .player-card {
+    text-align: center;
+    padding: 16px;
+    background: var(--bg3);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .player-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--neon2));
+  }
+
+  .player-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--neon2));
+    margin: 0 auto 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 0 20px rgba(255,95,95,0.4);
+  }
+
+  .player-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .xp-bar-wrap {
+    background: var(--bg);
+    border-radius: 4px;
+    height: 6px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .xp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px var(--accent);
+    width: 30%;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-box {
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-box.wpm { border-color: rgba(0,245,255,0.3); }
+  .stat-box.acc { border-color: rgba(57,255,137,0.3); }
+  .stat-box.combo { border-color: rgba(255,157,61,0.3); }
+  .stat-box.time { border-color: rgba(179,71,255,0.3); }
+
+  .stat-label {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 2px 0;
+  }
+  .stat-box.wpm .stat-value { color: var(--neon); }
+  .stat-box.acc .stat-value { color: var(--green); }
+  .stat-box.combo .stat-value { color: var(--accent2); }
+  .stat-box.time .stat-value { color: var(--neon2); }
+
+  .stat-sub { font-size: 9px; color: var(--muted); }
+
+  /* COMBO FIRE */
+  .combo-fire {
+    display: none;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .combo-fire.on { display: block; animation: pulse 0.5s ease infinite alternate; }
+  @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+
+  /* ERROR LOG */
+  .error-log {
+    background: var(--bg3);
+    border-radius: 8px;
+    border: 1px solid rgba(255,95,95,0.2);
+    padding: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+  .error-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .error-word { color: var(--accent); font-family: 'Share Tech Mono', monospace; }
+  .error-count {
+    background: var(--accent);
+    color: white;
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .error-log:empty::after {
+    content: '아직 오답 없음 👍';
+    color: var(--muted);
+    font-size: 11px;
+    display: block;
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  /* ── MAIN AREA ── */
+  .main-area {
+    background: var(--bg2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    gap: 32px;
+  }
+
+  /* BG GRID */
+  .main-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,95,95,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,95,95,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* FLOATING WORDS LANE */
+  .word-lane {
+    width: 100%;
+    height: 60px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .floating-word {
+    position: absolute;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    color: rgba(255,95,95,0.25);
+    white-space: nowrap;
+    animation: floatLeft linear infinite;
+    pointer-events: none;
+  }
+  .floating-word:nth-child(odd) { color: rgba(179,71,255,0.2); font-size: 18px; }
+  @keyframes floatLeft {
+    from { transform: translateX(calc(100vw + 100px)); }
+    to { transform: translateX(-100%); }
+  }
+
+  /* TARGET WORD CARD */
+  .target-card {
+    background: linear-gradient(135deg, var(--accent) 0%, #ff3535 100%);
+    border-radius: 20px;
+    padding: 28px 64px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(255,95,95,0.5), 0 0 120px rgba(255,95,95,0.2);
+    position: relative;
+    min-width: 420px;
+    max-width: 820px;
+    animation: cardPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes cardPop {
+    from { transform: scale(0.85); opacity: 0.5; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .target-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 3px;
+    font-family: 'Share Tech Mono', monospace;
+    margin-bottom: 10px;
+  }
+  .target-word {
+    font-family: 'Orbitron', monospace;
+    font-size: 58px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: 4px;
+    text-shadow: 0 0 30px rgba(255,255,255,0.6), 0 2px 8px rgba(0,0,0,0.3);
+    word-break: break-all;
+    max-width: 760px;
+    line-height: 1.1;
+  }
+  /* Korean mode: use Noto Sans for Korean text */
+  .target-word.ko-mode {
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 2px;
+  }
+  .target-meaning {
+    margin-top: 10px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Noto Sans KR', sans-serif;
+    display: none;
+  }
+  .target-meaning.show { display: block; }
+  .target-category {
+    position: absolute;
+    top: -10px; right: -10px;
+    background: var(--neon2);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    color: white;
+    box-shadow: 0 0 12px var(--neon2);
+  }
+
+  /* FEEDBACK */
+  .feedback-overlay {
+    position: absolute;
+    font-family: 'Orbitron', monospace;
+    font-size: 48px;
+    font-weight: 900;
+    pointer-events: none;
+    opacity: 0;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .feedback-overlay.correct {
+    color: var(--green);
+    animation: feedbackPop 0.4s ease forwards;
+    text-shadow: 0 0 30px var(--green);
+  }
+  .feedback-overlay.wrong {
+    color: var(--accent);
+    animation: feedbackPop 0.4s ease forwards;
+    text-shadow: 0 0 30px var(--accent);
+  }
+  @keyframes feedbackPop {
+    0% { opacity: 0; transform: translate(-50%,-50%) scale(0.5); }
+    40% { opacity: 1; transform: translate(-50%,-60%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%,-80%) scale(1); }
+  }
+
+  /* INPUT AREA */
+  .input-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 640px;
+    max-width: 92vw;
+  }
+
+  .char-display {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 36px;
+    letter-spacing: 6px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 420px;
+    max-width: 820px;
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .char-display.ko-mode {
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 3px;
+  }
+  .char {
+    transition: color 0.1s;
+  }
+  .char.correct { color: var(--green); }
+  .char.wrong { color: var(--accent); text-decoration: underline; }
+  .char.pending { color: var(--muted); }
+  .char.cursor {
+    border-bottom: 2px solid var(--neon);
+    animation: blink 0.8s infinite;
+  }
+  @keyframes blink { 50% { border-color: transparent; } }
+
+  .typing-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 20px;
+    color: var(--text);
+    outline: none;
+    transition: all 0.2s;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  .typing-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(255,95,95,0.25);
+    background: var(--bg);
+  }
+  .typing-input.input-correct {
+    border-color: var(--green);
+    box-shadow: 0 0 20px rgba(57,255,137,0.3);
+  }
+  .typing-input.input-wrong {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(255,95,95,0.4);
+    animation: shake 0.3s ease;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  /* START SCREEN */
+  .start-screen {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,15,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    z-index: 20;
+  }
+  .start-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--neon2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .start-sub {
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.8;
+  }
+  .start-btn {
+    padding: 14px 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px rgba(255,95,95,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(255,95,95,0.7);
+  }
+
+  /* RESULT SCREEN */
+  .result-screen {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,15,0.97);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 20;
+  }
+  .result-screen.show { display: flex; }
+  .result-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 30px var(--gold);
+  }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    min-width: 320px;
+  }
+  .result-item {
+    background: var(--bg3);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .result-item-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+  .result-item-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--neon);
+  }
+  .result-grade {
+    font-family: 'Orbitron', monospace;
+    font-size: 72px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .result-btns { display: flex; gap: 12px; }
+  .retry-btn, .next-btn {
+    padding: 10px 32px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.2s;
+  }
+  .retry-btn:hover, .next-btn:hover { transform: scale(1.05); }
+  .retry-btn { background: var(--bg3); color: var(--muted); border: 1px solid var(--border); }
+  .next-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+
+  /* ── BOTTOM BAR (Level) ── */
+  .bottombar {
+    grid-column: 1 / -1;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    position: relative;
+  }
+  .bottombar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--neon2), var(--neon), var(--accent));
+  }
+
+  .level-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .level-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+    padding: 8px 0;
+  }
+  .level-scroll::-webkit-scrollbar { display: none; }
+  .level-btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--muted);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .level-btn:hover { border-color: var(--accent); color: var(--text); }
+  .level-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 16px rgba(255,95,95,0.5);
+  }
+  .level-btn.locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .level-btn.cleared::after {
+    content: '✓';
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--green);
+    color: var(--bg);
+    border-radius: 50%;
+    width: 16px; height: 16px;
+    font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+  }
+
+  .progress-bar-wrap {
+    width: 140px;
+    background: var(--bg3);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px var(--accent);
+    width: 0%;
+  }
+
+  .progress-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 60px;
+  }
+
+  /* STREAKS */
+  .streak-banner {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--accent2), var(--gold));
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    display: none;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 0 20px rgba(255,157,61,0.5);
+    z-index: 5;
+  }
+  .streak-banner.show { display: block; }
+  @keyframes slideIn {
+    from { transform: translateX(100px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* scrollbar */
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: var(--bg); }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="logo">⚡ TYPING MASTER</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <!-- 언어 선택 (영어/한글) -->
+      <div class="lang-switch">
+        <button class="lang-switch-btn active" id="switch-en" onclick="switchDataLang('en')">🇺🇸 영어</button>
+        <button class="lang-switch-btn" id="switch-ko" onclick="switchDataLang('ko')">🇰🇷 한글</button>
+      </div>
+      <!-- 단어/문장 모드 -->
+      <div class="mode-tabs">
+        <button class="mode-tab active" onclick="setMode('word')" id="tab-word">📝 단어</button>
+        <button class="mode-tab" onclick="setMode('sentence')" id="tab-sentence">💬 문장</button>
+      </div>
+    </div>
+    <!-- 뜻 보기 (영어 모드일 때만 표시) -->
+    <div class="lang-toggle" id="meaning-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">ENG</button>
+      <button class="lang-btn" onclick="setLang('ko')">뜻 보기</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="player-card">
+      <div class="player-avatar">🎮</div>
+      <div class="player-name">TYPING HERO</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px;" id="level-badge">LEVEL 1 · ROOKIE</div>
+      <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar"></div></div>
+      <div style="font-size:9px;color:var(--muted);margin-top:4px;" id="xp-text">XP 0 / 100</div>
+    </div>
+
+    <div>
+      <div class="section-title">📊 진행중 통계</div>
+      <div class="stats-grid">
+        <div class="stat-box wpm">
+          <div class="stat-label">WPM</div>
+          <div class="stat-value" id="wpm-val">0</div>
+          <div class="stat-sub">최고 <span id="wpm-best">0</span></div>
+        </div>
+        <div class="stat-box acc">
+          <div class="stat-label">정확도</div>
+          <div class="stat-value" id="acc-val">100</div>
+          <div class="stat-sub">%</div>
+        </div>
+        <div class="stat-box combo">
+          <div class="stat-label">콤보</div>
+          <div class="stat-value" id="combo-val">0</div>
+          <div class="combo-fire" id="combo-fire">🔥 HOT!</div>
+        </div>
+        <div class="stat-box time">
+          <div class="stat-label">시간</div>
+          <div class="stat-value" id="time-val">0:00</div>
+          <div class="stat-sub">경과</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">❌ 오답 노트</div>
+      <div class="error-log" id="error-log"></div>
+    </div>
+
+    <div>
+      <div class="section-title">📈 전체 통계</div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px;border:1px solid var(--border);font-size:12px;line-height:2;">
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">총 입력 단어</span><span id="total-words" style="font-family:'Share Tech Mono'">0</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">최고 WPM</span><span id="all-best-wpm" style="font-family:'Share Tech Mono';color:var(--neon)">0</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">최고 콤보</span><span id="all-best-combo" style="font-family:'Share Tech Mono';color:var(--accent2)">0</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted)">클리어 레벨</span><span id="cleared-levels" style="font-family:'Share Tech Mono';color:var(--green)">0</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="main-area" id="main-area">
+
+    <!-- START SCREEN -->
+    <div class="start-screen" id="start-screen">
+      <div class="start-title">KPOP × GAME<br>TYPING MASTER</div>
+      <div class="start-sub">
+        🎵 KPOP & 🎮 게임 단어/문장으로 타자 실력 UP!<br>
+        오답은 즉시 재출제 · RPG 레벨 시스템 · 실시간 WPM
+      </div>
+      <button class="start-btn" onclick="startGame()">▶ START GAME</button>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="result-screen" id="result-screen">
+      <div class="result-grade" id="result-grade">A+</div>
+      <div class="result-title">레벨 클리어! 🎉</div>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-item-label">최고 WPM</div>
+          <div class="result-item-val" id="r-wpm">0</div>
+        </div>
+        <div class="result-item">
+          <div class="result-item-label">정확도</div>
+          <div class="result-item-val" id="r-acc">0%</div>
+        </div>
+        <div class="result-item">
+          <div class="result-item-label">최고 콤보</div>
+          <div class="result-item-val" id="r-combo">0</div>
+        </div>
+        <div class="result-item">
+          <div class="result-item-label">XP 획득</div>
+          <div class="result-item-val" id="r-xp">+0</div>
+        </div>
+      </div>
+      <div class="result-btns">
+        <button class="retry-btn" onclick="retryLevel()">↺ 다시하기</button>
+        <button class="next-btn" onclick="nextLevel()">다음 레벨 ▶</button>
+      </div>
+    </div>
+
+    <!-- GAME CONTENT -->
+    <div class="word-lane" id="word-lane"></div>
+
+    <div style="position:relative">
+      <div class="target-card" id="target-card">
+        <div class="target-label" id="target-category-top">입력할 단어</div>
+        <div class="target-word" id="target-word">READY</div>
+        <div class="target-meaning" id="target-meaning"></div>
+        <div class="target-category" id="target-cat-badge">KPOP</div>
+      </div>
+    </div>
+
+    <div class="char-display" id="char-display"></div>
+
+    <div class="input-wrap">
+      <input
+        type="text"
+        class="typing-input"
+        id="typing-input"
+        placeholder="타이핑 시작..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        disabled
+      />
+    </div>
+
+    <div class="feedback-overlay" id="feedback"></div>
+    <div class="streak-banner" id="streak-banner">🔥 5 COMBO!</div>
+  </main>
+
+  <!-- BOTTOM BAR -->
+  <footer class="bottombar">
+    <div class="level-label">⚔ LEVEL</div>
+    <div class="level-scroll" id="level-scroll"></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0 / 0</div>
+  </footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA: KPOP + GAME WORDS & SENTENCES
+// ═══════════════════════════════════════════
+const DATA = {
+  words: [
+    // Level 1 - KPOP Basic
+    { w:'idol', k:'아이돌', cat:'KPOP', lv:1 },
+    { w:'bias', k:'최애', cat:'KPOP', lv:1 },
+    { w:'dance', k:'댄스', cat:'KPOP', lv:1 },
+    { w:'group', k:'그룹', cat:'KPOP', lv:1 },
+    { w:'album', k:'앨범', cat:'KPOP', lv:1 },
+    { w:'stage', k:'무대', cat:'KPOP', lv:1 },
+    { w:'debut', k:'데뷔', cat:'KPOP', lv:1 },
+    { w:'quest', k:'퀘스트', cat:'GAME', lv:1 },
+    { w:'loot', k:'전리품', cat:'GAME', lv:1 },
+    { w:'buff', k:'버프', cat:'GAME', lv:1 },
+    { w:'tank', k:'탱커', cat:'GAME', lv:1 },
+    { w:'heal', k:'힐', cat:'GAME', lv:1 },
+    { w:'boss', k:'보스', cat:'GAME', lv:1 },
+    { w:'gold', k:'골드', cat:'GAME', lv:1 },
+
+    // Level 2 - KPOP/GAME Mid
+    { w:'fandom', k:'팬덤', cat:'KPOP', lv:2 },
+    { w:'concept', k:'콘셉트', cat:'KPOP', lv:2 },
+    { w:'title', k:'타이틀', cat:'KPOP', lv:2 },
+    { w:'agency', k:'소속사', cat:'KPOP', lv:2 },
+    { w:'rookie', k:'신인', cat:'KPOP', lv:2 },
+    { w:'maknae', k:'막내', cat:'KPOP', lv:2 },
+    { w:'spawn', k:'스폰', cat:'GAME', lv:2 },
+    { w:'guild', k:'길드', cat:'GAME', lv:2 },
+    { w:'skill', k:'스킬', cat:'GAME', lv:2 },
+    { w:'level', k:'레벨', cat:'GAME', lv:2 },
+    { w:'armor', k:'방어구', cat:'GAME', lv:2 },
+    { w:'sword', k:'검', cat:'GAME', lv:2 },
+    { w:'dungeon', k:'던전', cat:'GAME', lv:2 },
+    { w:'legend', k:'전설', cat:'GAME', lv:2 },
+
+    // Level 3 - KPOP terms
+    { w:'comeback', k:'컴백', cat:'KPOP', lv:3 },
+    { w:'teaser', k:'티저', cat:'KPOP', lv:3 },
+    { w:'mixtape', k:'믹스테이프', cat:'KPOP', lv:3 },
+    { w:'daebak', k:'대박', cat:'KPOP', lv:3 },
+    { w:'sasaeng', k:'사생팬', cat:'KPOP', lv:3 },
+    { w:'respawn', k:'부활', cat:'GAME', lv:3 },
+    { w:'warlock', k:'흑마법사', cat:'GAME', lv:3 },
+    { w:'warrior', k:'전사', cat:'GAME', lv:3 },
+    { w:'paladin', k:'성기사', cat:'GAME', lv:3 },
+    { w:'stealth', k:'은신', cat:'GAME', lv:3 },
+    { w:'cooldown', k:'쿨다운', cat:'GAME', lv:3 },
+    { w:'critical', k:'크리티컬', cat:'GAME', lv:3 },
+
+    // Level 4
+    { w:'euphoria', k:'행복감', cat:'KPOP', lv:4 },
+    { w:'aesthetic', k:'미적 감각', cat:'KPOP', lv:4 },
+    { w:'choreography', k:'안무', cat:'KPOP', lv:4 },
+    { w:'achievement', k:'업적', cat:'GAME', lv:4 },
+    { w:'inventory', k:'인벤토리', cat:'GAME', lv:4 },
+    { w:'multiplayer', k:'멀티플레이', cat:'GAME', lv:4 },
+    { w:'character', k:'캐릭터', cat:'GAME', lv:4 },
+    { w:'ultimate', k:'궁극기', cat:'GAME', lv:4 },
+
+    // Level 5 - Advanced
+    { w:'performance', k:'퍼포먼스', cat:'KPOP', lv:5 },
+    { w:'collaboration', k:'콜라보', cat:'KPOP', lv:5 },
+    { w:'merchandise', k:'굿즈', cat:'KPOP', lv:5 },
+    { w:'championship', k:'챔피언십', cat:'GAME', lv:5 },
+    { w:'leaderboard', k:'리더보드', cat:'GAME', lv:5 },
+    { w:'anniversary', k:'기념일', cat:'KPOP', lv:5 },
+    { w:'tournament', k:'토너먼트', cat:'GAME', lv:5 },
+    { w:'resurrection', k:'부활', cat:'GAME', lv:5 },
+
+    // Level 6-10 longer words
+    { w:'authentication', k:'인증', cat:'GAME', lv:6 },
+    { w:'extraordinary', k:'비범한', cat:'KPOP', lv:6 },
+    { w:'counterattack', k:'반격', cat:'GAME', lv:7 },
+    { w:'electrifying', k:'짜릿한', cat:'KPOP', lv:7 },
+    { w:'overwhelming', k:'압도적인', cat:'GAME', lv:8 },
+    { w:'revolutionary', k:'혁명적인', cat:'KPOP', lv:8 },
+    { w:'unconditionally', k:'무조건적으로', cat:'KPOP', lv:9 },
+    { w:'extraordinarily', k:'비범하게', cat:'GAME', lv:9 },
+    { w:'incomprehensible', k:'이해불가', cat:'GAME', lv:10 },
+    { w:'internationally', k:'국제적으로', cat:'KPOP', lv:10 },
+  ],
+
+  sentences: [
+    // Level 1
+    { w:'Press start to play', k:'시작을 누르세요', cat:'GAME', lv:1 },
+    { w:'BTS is so cool', k:'BTS는 정말 멋져', cat:'KPOP', lv:1 },
+    { w:'Game over try again', k:'게임 오버 다시 시도', cat:'GAME', lv:1 },
+    { w:'I love kpop music', k:'케이팝 음악을 사랑해', cat:'KPOP', lv:1 },
+
+    // Level 2
+    { w:'Level up your character now', k:'지금 캐릭터를 레벨업해', cat:'GAME', lv:2 },
+    { w:'BTS broke the world record', k:'BTS가 세계 기록을 깼다', cat:'KPOP', lv:2 },
+    { w:'Collect all the rare items', k:'모든 희귀 아이템을 모아라', cat:'GAME', lv:2 },
+    { w:'Blackpink is in your area', k:'블랙핑크가 온다', cat:'KPOP', lv:2 },
+
+    // Level 3
+    { w:'The boss drops rare legendary gear', k:'보스가 전설 장비를 드랍한다', cat:'GAME', lv:3 },
+    { w:'NewJeans released a new comeback album', k:'뉴진스가 새 컴백 앨범을 냈다', cat:'KPOP', lv:3 },
+    { w:'Use your ultimate skill carefully here', k:'여기서 궁극기를 신중하게 써라', cat:'GAME', lv:3 },
+    { w:'The fandom sold out all tickets', k:'팬덤이 모든 티켓을 매진시켰다', cat:'KPOP', lv:3 },
+
+    // Level 4
+    { w:'Complete the dungeon to earn bonus experience', k:'던전을 클리어하면 추가 경험치를 얻는다', cat:'GAME', lv:4 },
+    { w:'TWICE performed their choreography perfectly tonight', k:'트와이스가 오늘 밤 안무를 완벽하게 선보였다', cat:'KPOP', lv:4 },
+    { w:'The guild leader organized a massive raid', k:'길드 마스터가 대규모 레이드를 조직했다', cat:'GAME', lv:4 },
+
+    // Level 5
+    { w:'BTS members each have unique individual concepts', k:'BTS 멤버들은 각자 독특한 개인 콘셉트를 가졌다', cat:'KPOP', lv:5 },
+    { w:'The final boss has multiple attack patterns', k:'최종 보스는 여러 공격 패턴을 가지고 있다', cat:'GAME', lv:5 },
+    { w:'Aespa debuted with a revolutionary metaverse concept', k:'에스파는 혁신적인 메타버스 콘셉트로 데뷔했다', cat:'KPOP', lv:5 },
+
+    // Level 6
+    { w:'Equip your character with the best legendary armor set', k:'캐릭터에게 최고의 전설 방어구 세트를 장착해', cat:'GAME', lv:6 },
+    { w:'The choreography requires precise timing and synchronization', k:'안무는 정확한 타이밍과 싱크가 필요하다', cat:'KPOP', lv:6 },
+
+    // Level 7
+    { w:'The legendary sword deals massive critical damage to enemies', k:'전설의 검은 적에게 엄청난 치명타 피해를 준다', cat:'GAME', lv:7 },
+    { w:'HYBE Entertainment manages multiple successful idol groups globally', k:'하이브 엔터테인먼트는 전 세계 여러 성공한 아이돌 그룹을 관리한다', cat:'KPOP', lv:7 },
+
+    // Level 8
+    { w:'Completing the championship tournament unlocks exclusive cosmetic rewards', k:'챔피언십 토너먼트 완료시 독점 외형 보상이 해제된다', cat:'GAME', lv:8 },
+
+    // Level 9
+    { w:'The revolutionary new generation of KPOP artists are breaking international boundaries', k:'혁신적인 새 세대 케이팝 아티스트들이 국경을 넘고 있다', cat:'KPOP', lv:9 },
+
+    // Level 10
+    { w:'Mastering the extraordinarily complex combat mechanics requires dedication and consistent practice', k:'지극히 복잡한 전투 메커니즘을 마스터하려면 헌신과 꾸준한 연습이 필요하다', cat:'GAME', lv:10 },
+  ]
+};
+
+const DATA_KO = {
+  words: [
+    // Level 1 - KPOP 기본 한글 단어
+    { w:'아이돌', k:'idol', cat:'KPOP', lv:1 },
+    { w:'무대', k:'stage', cat:'KPOP', lv:1 },
+    { w:'댄스', k:'dance', cat:'KPOP', lv:1 },
+    { w:'앨범', k:'album', cat:'KPOP', lv:1 },
+    { w:'팬덤', k:'fandom', cat:'KPOP', lv:1 },
+    { w:'데뷔', k:'debut', cat:'KPOP', lv:1 },
+    { w:'보스', k:'boss', cat:'GAME', lv:1 },
+    { w:'레벨', k:'level', cat:'GAME', lv:1 },
+    { w:'힐링', k:'healing', cat:'GAME', lv:1 },
+    { w:'버프', k:'buff', cat:'GAME', lv:1 },
+    { w:'길드', k:'guild', cat:'GAME', lv:1 },
+    { w:'스킬', k:'skill', cat:'GAME', lv:1 },
+    { w:'골드', k:'gold', cat:'GAME', lv:1 },
+    { w:'그룹', k:'group', cat:'KPOP', lv:1 },
+
+    // Level 2
+    { w:'컴백', k:'comeback', cat:'KPOP', lv:2 },
+    { w:'최애', k:'bias (fav)', cat:'KPOP', lv:2 },
+    { w:'콘셉트', k:'concept', cat:'KPOP', lv:2 },
+    { w:'타이틀', k:'title', cat:'KPOP', lv:2 },
+    { w:'소속사', k:'agency', cat:'KPOP', lv:2 },
+    { w:'전사', k:'warrior', cat:'GAME', lv:2 },
+    { w:'던전', k:'dungeon', cat:'GAME', lv:2 },
+    { w:'마법사', k:'wizard', cat:'GAME', lv:2 },
+    { w:'치명타', k:'critical', cat:'GAME', lv:2 },
+    { w:'쿨다운', k:'cooldown', cat:'GAME', lv:2 },
+    { w:'인벤', k:'inventory', cat:'GAME', lv:2 },
+    { w:'전설', k:'legend', cat:'GAME', lv:2 },
+    { w:'신인', k:'rookie', cat:'KPOP', lv:2 },
+
+    // Level 3
+    { w:'퍼포먼스', k:'performance', cat:'KPOP', lv:3 },
+    { w:'안무가', k:'choreographer', cat:'KPOP', lv:3 },
+    { w:'콜라보', k:'collaboration', cat:'KPOP', lv:3 },
+    { w:'티저영상', k:'teaser video', cat:'KPOP', lv:3 },
+    { w:'오토어택', k:'auto attack', cat:'GAME', lv:3 },
+    { w:'리스폰', k:'respawn', cat:'GAME', lv:3 },
+    { w:'멀티플레이', k:'multiplayer', cat:'GAME', lv:3 },
+    { w:'캐릭터', k:'character', cat:'GAME', lv:3 },
+    { w:'방어구', k:'armor', cat:'GAME', lv:3 },
+    { w:'스테이지', k:'stage', cat:'GAME', lv:3 },
+
+    // Level 4
+    { w:'세계관', k:'worldview/lore', cat:'KPOP', lv:4 },
+    { w:'포토카드', k:'photo card', cat:'KPOP', lv:4 },
+    { w:'챌린지', k:'challenge', cat:'KPOP', lv:4 },
+    { w:'부활아이템', k:'revival item', cat:'GAME', lv:4 },
+    { w:'업적달성', k:'achievement', cat:'GAME', lv:4 },
+    { w:'토너먼트', k:'tournament', cat:'GAME', lv:4 },
+    { w:'궁극기', k:'ultimate skill', cat:'GAME', lv:4 },
+    { w:'리더보드', k:'leaderboard', cat:'GAME', lv:4 },
+
+    // Level 5
+    { w:'안무영상', k:'choreography video', cat:'KPOP', lv:5 },
+    { w:'사인회', k:'fan signing', cat:'KPOP', lv:5 },
+    { w:'대기실', k:'waiting room', cat:'KPOP', lv:5 },
+    { w:'챔피언십', k:'championship', cat:'GAME', lv:5 },
+    { w:'레이드보스', k:'raid boss', cat:'GAME', lv:5 },
+    { w:'캐릭터빌드', k:'character build', cat:'GAME', lv:5 },
+
+    // Level 6
+    { w:'월드투어콘서트', k:'world tour concert', cat:'KPOP', lv:6 },
+    { w:'인증이벤트', k:'auth event', cat:'GAME', lv:6 },
+    { w:'랭킹전시즌', k:'ranked season', cat:'GAME', lv:6 },
+
+    // Level 7
+    { w:'스트리밍역주행', k:'streaming comeback', cat:'KPOP', lv:7 },
+    { w:'최종보스전략', k:'final boss strategy', cat:'GAME', lv:7 },
+
+    // Level 8
+    { w:'케이팝세계화', k:'KPOP globalization', cat:'KPOP', lv:8 },
+    { w:'길드마스터권한', k:'guild master rights', cat:'GAME', lv:8 },
+
+    // Level 9
+    { w:'아이돌연습생선발', k:'trainee selection', cat:'KPOP', lv:9 },
+    { w:'멀티플레이어전략', k:'multiplayer strategy', cat:'GAME', lv:9 },
+
+    // Level 10
+    { w:'케이팝글로벌팬덤확장', k:'kpop global fandom expansion', cat:'KPOP', lv:10 },
+    { w:'토너먼트최종결승전', k:'tournament grand finals', cat:'GAME', lv:10 },
+  ],
+
+  sentences: [
+    // Level 1
+    { w:'시작 버튼을 눌러라', k:'Press the start button', cat:'GAME', lv:1 },
+    { w:'BTS는 정말 멋져', k:'BTS is so cool', cat:'KPOP', lv:1 },
+    { w:'게임 오버야', k:'Game over', cat:'GAME', lv:1 },
+    { w:'케이팝을 좋아해', k:'I love KPOP', cat:'KPOP', lv:1 },
+
+    // Level 2
+    { w:'캐릭터를 레벨업 해', k:'Level up your character', cat:'GAME', lv:2 },
+    { w:'BTS가 기록을 깼다', k:'BTS broke the record', cat:'KPOP', lv:2 },
+    { w:'희귀 아이템을 모아라', k:'Collect rare items', cat:'GAME', lv:2 },
+    { w:'블랙핑크가 돌아왔다', k:'Blackpink is back', cat:'KPOP', lv:2 },
+
+    // Level 3
+    { w:'보스가 전설 장비를 드랍한다', k:'The boss drops legendary gear', cat:'GAME', lv:3 },
+    { w:'뉴진스가 새 앨범을 냈다', k:'NewJeans released a new album', cat:'KPOP', lv:3 },
+    { w:'궁극기를 신중하게 사용해라', k:'Use your ultimate skill carefully', cat:'GAME', lv:3 },
+    { w:'팬덤이 모든 티켓을 샀다', k:'The fandom bought all tickets', cat:'KPOP', lv:3 },
+
+    // Level 4
+    { w:'던전을 클리어하면 경험치를 얻는다', k:'Clear the dungeon to earn XP', cat:'GAME', lv:4 },
+    { w:'트와이스가 오늘 안무를 완벽히 선보였다', k:'TWICE showed perfect choreography', cat:'KPOP', lv:4 },
+    { w:'길드장이 대규모 레이드를 조직했다', k:'Guild leader organized a massive raid', cat:'GAME', lv:4 },
+
+    // Level 5
+    { w:'BTS 멤버들은 각자 독특한 콘셉트를 가졌다', k:'BTS members each have unique concepts', cat:'KPOP', lv:5 },
+    { w:'최종 보스는 여러 공격 패턴을 가진다', k:'The final boss has multiple attack patterns', cat:'GAME', lv:5 },
+    { w:'에스파는 메타버스 콘셉트로 데뷔했다', k:'Aespa debuted with a metaverse concept', cat:'KPOP', lv:5 },
+
+    // Level 6
+    { w:'캐릭터에게 최고의 전설 방어구를 장착해라', k:'Equip your character with the best legendary armor', cat:'GAME', lv:6 },
+    { w:'안무는 정확한 타이밍과 싱크가 필요하다', k:'Choreography requires precise timing and sync', cat:'KPOP', lv:6 },
+
+    // Level 7
+    { w:'전설의 검은 적에게 엄청난 피해를 준다', k:'The legendary sword deals massive damage to enemies', cat:'GAME', lv:7 },
+    { w:'하이브는 여러 성공적인 아이돌 그룹을 관리한다', k:'HYBE manages multiple successful idol groups', cat:'KPOP', lv:7 },
+
+    // Level 8
+    { w:'챔피언십 토너먼트를 완료하면 보상이 해제된다', k:'Completing the championship unlocks exclusive rewards', cat:'GAME', lv:8 },
+
+    // Level 9
+    { w:'새로운 세대의 케이팝 아티스트들이 국경을 넘고 있다', k:'New generation KPOP artists are crossing international boundaries', cat:'KPOP', lv:9 },
+
+    // Level 10
+    { w:'복잡한 전투 메커니즘을 마스터하려면 꾸준한 연습이 필요하다', k:'Mastering complex combat mechanics requires consistent practice', cat:'GAME', lv:10 },
+  ]
+};
+let state = {
+  mode: 'word',
+  lang: 'en',
+  dataLang: 'en', // 'en' = English typing, 'ko' = Korean typing
+  level: 1,
+  running: false,
+  currentItem: null,
+  queue: [],
+  errorMap: {}, // word -> error count
+  typed: 0, // total correctly typed words
+  errors: 0, // total error keystrokes
+  keystrokes: 0,
+  combo: 0,
+  bestCombo: 0,
+  wpm: 0,
+  bestWpm: 0,
+  startTime: null,
+  timerInterval: null,
+  wpmInterval: null,
+  xp: 0,
+  levelXp: 0,
+  clearedLevels: new Set(),
+  allBestWpm: 0,
+  allBestCombo: 0,
+  allTotalWords: 0,
+  progressCurrent: 0,
+  progressGoal: 15,
+  levelBtns: {},
+};
+
+const LEVEL_NAMES = ['', 'ROOKIE', 'BEGINNER', 'NOVICE', 'APPRENTICE', 'SKILLED', 'EXPERT', 'MASTER', 'GRANDMASTER', 'LEGEND', 'GOD'];
+const GOALS = [0, 10, 12, 14, 16, 16, 18, 18, 20, 20, 20];
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+function init() {
+  buildLevelBtns();
+  spawnFloatingWords();
+}
+
+function buildLevelBtns() {
+  const wrap = document.getElementById('level-scroll');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'level-btn' + (i === 1 ? ' active' : '') + (i > 1 ? ' locked' : '');
+    btn.textContent = `LV.${i} ${LEVEL_NAMES[i]}`;
+    btn.dataset.lv = i;
+    btn.onclick = () => {
+      if (btn.classList.contains('locked')) return;
+      selectLevel(i);
+    };
+    state.levelBtns[i] = btn;
+    wrap.appendChild(btn);
+  }
+}
+
+function selectLevel(lv) {
+  state.level = lv;
+  Object.values(state.levelBtns).forEach(b => b.classList.remove('active'));
+  state.levelBtns[lv].classList.add('active');
+  if (state.running) resetRound();
+}
+
+function spawnFloatingWords() {
+  const lane = document.getElementById('word-lane');
+  const dataset = state.dataLang === 'ko' ? DATA_KO : DATA;
+  const words = dataset.words.slice(0, 20).map(d => d.w);
+  lane.innerHTML = '';
+  words.forEach((w, i) => {
+    const el = document.createElement('span');
+    el.className = 'floating-word';
+    if (state.dataLang === 'ko') el.style.fontFamily = "'Noto Sans KR', sans-serif";
+    el.textContent = w;
+    el.style.animationDuration = (8 + Math.random() * 12) + 's';
+    el.style.animationDelay = -(Math.random() * 15) + 's';
+    el.style.top = (10 + Math.random() * 40) + 'px';
+    lane.appendChild(el);
+  });
+}
+
+// ═══════════════════════════════════════════
+//  LANGUAGE SWITCH (English ↔ Korean)
+// ═══════════════════════════════════════════
+function switchDataLang(dl) {
+  state.dataLang = dl;
+  document.getElementById('switch-en').classList.toggle('active', dl === 'en');
+  document.getElementById('switch-ko').classList.toggle('active', dl === 'ko');
+
+  // Hide/show meaning toggle (only useful in English mode)
+  document.getElementById('meaning-toggle').style.display = dl === 'en' ? 'flex' : 'none';
+
+  // Reset meaning to off when switching
+  state.lang = 'en';
+  document.querySelectorAll('.lang-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === 0);
+  });
+  document.getElementById('target-meaning').classList.remove('show');
+
+  // Update labels
+  const label = dl === 'ko' ? '입력할 한글' : '입력할 단어';
+  document.getElementById('target-category-top').textContent = state.mode === 'word' ? label : (dl === 'ko' ? '입력할 한글 문장' : '입력할 문장');
+
+  // Update char display font
+  const cd = document.getElementById('char-display');
+  const tw = document.getElementById('target-word');
+  cd.classList.toggle('ko-mode', dl === 'ko');
+  tw.classList.toggle('ko-mode', dl === 'ko');
+
+  // Refresh floating words
+  spawnFloatingWords();
+
+  if (state.running) resetRound();
+}
+// ═══════════════════════════════════════════
+function setMode(m) {
+  state.mode = m;
+  document.querySelectorAll('.mode-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && m === 'word') || (i === 1 && m === 'sentence'));
+  });
+  const isKo = state.dataLang === 'ko';
+  if (m === 'word') document.getElementById('target-category-top').textContent = isKo ? '입력할 한글' : '입력할 단어';
+  else document.getElementById('target-category-top').textContent = isKo ? '입력할 한글 문장' : '입력할 문장';
+  if (state.running) resetRound();
+}
+
+function setLang(l) {
+  state.lang = l;
+  document.querySelectorAll('.lang-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && l === 'en') || (i === 1 && l === 'ko'));
+  });
+  const meaning = document.getElementById('target-meaning');
+  if (l === 'ko') meaning.classList.add('show');
+  else meaning.classList.remove('show');
+}
+
+// ═══════════════════════════════════════════
+//  QUEUE MANAGEMENT (weighted by error)
+// ═══════════════════════════════════════════
+function buildQueue() {
+  const dataset = state.dataLang === 'ko' ? DATA_KO : DATA;
+  const pool = (state.mode === 'word' ? dataset.words : dataset.sentences)
+    .filter(d => d.lv <= state.level && d.lv >= Math.max(1, state.level - 1));
+
+  // Weight: base 1, +errorCount bonus
+  let weighted = [];
+  pool.forEach(d => {
+    const ec = state.errorMap[d.w] || 0;
+    const weight = 1 + ec * 2; // error words appear more often
+    for (let i = 0; i < weight; i++) weighted.push(d);
+  });
+
+  // Shuffle
+  for (let i = weighted.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [weighted[i], weighted[j]] = [weighted[j], weighted[i]];
+  }
+
+  state.queue = weighted.slice(0, 40);
+}
+
+function nextItem() {
+  if (state.queue.length === 0) buildQueue();
+  state.currentItem = state.queue.shift();
+  renderTarget();
+  renderCharDisplay();
+  document.getElementById('typing-input').value = '';
+  document.getElementById('typing-input').className = 'typing-input';
+}
+
+function reInsertWrong(item) {
+  // Insert 1-2 positions ahead in queue
+  const pos = Math.min(1, state.queue.length);
+  state.queue.splice(pos, 0, item, item); // insert twice for extra practice
+}
+
+// ═══════════════════════════════════════════
+//  RENDER TARGET
+// ═══════════════════════════════════════════
+function renderTarget() {
+  const d = state.currentItem;
+  const tw = document.getElementById('target-word');
+  tw.textContent = d.w;
+  tw.classList.toggle('ko-mode', state.dataLang === 'ko');
+
+  // In English mode: show Korean meaning. In Korean mode: show English meaning
+  const meaningLabel = state.dataLang === 'ko' ? `🇺🇸 ${d.k}` : `🇰🇷 ${d.k}`;
+  document.getElementById('target-meaning').textContent = meaningLabel;
+  document.getElementById('target-cat-badge').textContent = d.cat;
+  document.getElementById('target-cat-badge').style.background =
+    d.cat === 'KPOP' ? 'var(--neon2)' : 'var(--neon)';
+  document.getElementById('target-cat-badge').style.color =
+    d.cat === 'KPOP' ? 'white' : 'black';
+
+  // Re-animate card
+  const card = document.getElementById('target-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = '';
+
+  // Auto-show meaning in Korean mode
+  const meaning = document.getElementById('target-meaning');
+  if (state.lang === 'ko' || state.dataLang === 'ko') {
+    meaning.classList.add('show');
+  } else {
+    meaning.classList.remove('show');
+  }
+}
+
+function renderCharDisplay() {
+  const target = state.currentItem.w;
+  const typed = document.getElementById('typing-input').value;
+  const display = document.getElementById('char-display');
+  display.classList.toggle('ko-mode', state.dataLang === 'ko');
+  display.innerHTML = '';
+  for (let i = 0; i < target.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    span.textContent = target[i];
+    if (i < typed.length) {
+      span.classList.add(typed[i] === target[i] ? 'correct' : 'wrong');
+    } else if (i === typed.length) {
+      span.classList.add('pending', 'cursor');
+    } else {
+      span.classList.add('pending');
+    }
+    display.appendChild(span);
+  }
+}
+
+// ═══════════════════════════════════════════
+//  GAME FLOW
+// ═══════════════════════════════════════════
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  state.running = true;
+  state.progressGoal = GOALS[state.level];
+  state.progressCurrent = 0;
+  state.startTime = Date.now();
+  state.typed = 0;
+  state.errors = 0;
+  state.keystrokes = 0;
+  state.combo = 0;
+  state.wpm = 0;
+
+  buildQueue();
+  nextItem();
+
+  const input = document.getElementById('typing-input');
+  input.disabled = false;
+  input.focus();
+
+  startTimers();
+  updateProgress();
+}
+
+function resetRound() {
+  clearIntervals();
+  state.progressCurrent = 0;
+  state.typed = 0;
+  state.errors = 0;
+  state.keystrokes = 0;
+  state.combo = 0;
+  state.wpm = 0;
+  state.startTime = Date.now();
+
+  document.getElementById('result-screen').classList.remove('show');
+  buildQueue();
+  nextItem();
+
+  const input = document.getElementById('typing-input');
+  input.disabled = false;
+  input.focus();
+  startTimers();
+  updateProgress();
+  updateStats();
+}
+
+function startTimers() {
+  clearIntervals();
+  state.timerInterval = setInterval(updateTimer, 1000);
+  state.wpmInterval = setInterval(calcWpm, 500);
+}
+
+function clearIntervals() {
+  clearInterval(state.timerInterval);
+  clearInterval(state.wpmInterval);
+}
+
+function updateTimer() {
+  if (!state.startTime) return;
+  const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  document.getElementById('time-val').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function calcWpm() {
+  if (!state.startTime) return;
+  const elapsed = (Date.now() - state.startTime) / 60000;
+  if (elapsed < 0.01) return;
+  const wpm = Math.round(state.typed / elapsed);
+  state.wpm = wpm;
+  if (wpm > state.bestWpm) state.bestWpm = wpm;
+  if (wpm > state.allBestWpm) {
+    state.allBestWpm = wpm;
+    document.getElementById('all-best-wpm').textContent = wpm;
+  }
+  document.getElementById('wpm-val').textContent = wpm;
+  document.getElementById('wpm-best').textContent = state.bestWpm;
+}
+
+function updateStats() {
+  const acc = state.keystrokes > 0
+    ? Math.round(((state.keystrokes - state.errors) / state.keystrokes) * 100)
+    : 100;
+  document.getElementById('acc-val').textContent = acc;
+  document.getElementById('combo-val').textContent = state.combo;
+  const fire = document.getElementById('combo-fire');
+  fire.classList.toggle('on', state.combo >= 5);
+}
+
+function updateProgress() {
+  const pct = Math.min(100, (state.progressCurrent / state.progressGoal) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${state.progressCurrent} / ${state.progressGoal}`;
+}
+
+// ═══════════════════════════════════════════
+//  INPUT HANDLER
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('typing-input');
+
+  input.addEventListener('input', e => {
+    if (!state.running || !state.currentItem) return;
+    state.keystrokes++;
+    const val = input.value;
+    const target = state.currentItem.w;
+    renderCharDisplay();
+
+    const trimmed = val.trimEnd();
+    const isKo = state.dataLang === 'ko';
+
+    if (state.mode === 'sentence') {
+      if (val.endsWith(' ') || val === target) {
+        checkAnswer(trimmed);
+      } else {
+        const isCorrectSoFar = target.startsWith(val);
+        input.className = 'typing-input' + (val.length > 0 ? (isCorrectSoFar ? '' : ' input-wrong') : '');
+      }
+    } else {
+      // word mode
+      // For Korean: check when length matches (no space trigger needed for single words)
+      // For English: also check on space
+      const spaceCheck = !isKo && val.includes(' ');
+      if (spaceCheck || val.length >= target.length) {
+        checkAnswer(trimmed);
+      } else {
+        const isCorrectSoFar = target.startsWith(val);
+        input.className = 'typing-input' + (val.length > 0 ? (isCorrectSoFar ? '' : ' input-wrong') : '');
+      }
+    }
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && state.running && state.currentItem) {
+      const val = input.value.trim();
+      checkAnswer(val);
+    }
+  });
+
+  init();
+});
+
+function checkAnswer(typed) {
+  const target = state.currentItem.w;
+  // Korean and English comparison - trim spaces, case-insensitive for EN
+  const t = typed.trim();
+  const isCorrect = state.dataLang === 'ko'
+    ? t === target
+    : t.toLowerCase() === target.toLowerCase();
+
+  if (isCorrect) {
+    onCorrect();
+  } else if (t.length > 0) {
+    onWrong();
+  }
+}
+
+function onCorrect() {
+  const item = state.currentItem;
+  state.typed++;
+  state.allTotalWords++;
+  state.combo++;
+  if (state.combo > state.bestCombo) state.bestCombo = state.combo;
+  if (state.combo > state.allBestCombo) {
+    state.allBestCombo = state.combo;
+    document.getElementById('all-best-combo').textContent = state.allBestCombo;
+  }
+  document.getElementById('total-words').textContent = state.allTotalWords;
+  state.progressCurrent++;
+
+  // XP
+  const xpGain = state.level * 5 + (state.combo >= 5 ? 3 : 0);
+  state.xp += xpGain;
+  state.levelXp += xpGain;
+  updateXpBar();
+
+  // Feedback
+  showFeedback('✓', 'correct');
+  document.getElementById('typing-input').className = 'typing-input input-correct';
+
+  // Streak banner
+  if (state.combo > 0 && state.combo % 5 === 0) {
+    showStreakBanner(state.combo);
+  }
+
+  updateStats();
+  updateProgress();
+
+  setTimeout(() => {
+    // Check if level complete
+    if (state.progressCurrent >= state.progressGoal) {
+      showResult();
+    } else {
+      nextItem();
+      document.getElementById('typing-input').focus();
+    }
+  }, 180);
+}
+
+function onWrong() {
+  const item = state.currentItem;
+  state.errors++;
+  state.combo = 0;
+
+  // Track error
+  state.errorMap[item.w] = (state.errorMap[item.w] || 0) + 1;
+  updateErrorLog();
+
+  // Re-insert into queue immediately
+  reInsertWrong(item);
+
+  // Feedback
+  showFeedback('✗', 'wrong');
+  document.getElementById('typing-input').className = 'typing-input input-wrong';
+
+  updateStats();
+
+  setTimeout(() => {
+    nextItem();
+    document.getElementById('typing-input').focus();
+  }, 300);
+}
+
+function showFeedback(text, cls) {
+  const fb = document.getElementById('feedback');
+  fb.textContent = text;
+  fb.className = 'feedback-overlay ' + cls;
+  setTimeout(() => fb.className = 'feedback-overlay', 450);
+}
+
+function showStreakBanner(combo) {
+  const banner = document.getElementById('streak-banner');
+  banner.textContent = `🔥 ${combo} COMBO!`;
+  banner.classList.add('show');
+  setTimeout(() => banner.classList.remove('show'), 1500);
+}
+
+function updateErrorLog() {
+  const log = document.getElementById('error-log');
+  const sorted = Object.entries(state.errorMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+  log.innerHTML = sorted.map(([w, c]) =>
+    `<div class="error-item"><span class="error-word">${w}</span><span class="error-count">×${c}</span></div>`
+  ).join('');
+}
+
+function updateXpBar() {
+  const maxXp = state.level * 100;
+  const pct = Math.min(100, (state.levelXp / maxXp) * 100);
+  document.getElementById('xp-bar').style.width = pct + '%';
+  document.getElementById('xp-text').textContent = `XP ${state.levelXp} / ${maxXp}`;
+  document.getElementById('level-badge').textContent = `LEVEL ${state.level} · ${LEVEL_NAMES[state.level]}`;
+}
+
+// ═══════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════
+function showResult() {
+  clearIntervals();
+  document.getElementById('typing-input').disabled = true;
+
+  state.clearedLevels.add(state.level);
+  document.getElementById('cleared-levels').textContent = state.clearedLevels.size;
+
+  // Unlock next level
+  if (state.level < 10) {
+    const nextLv = state.level + 1;
+    state.levelBtns[nextLv].classList.remove('locked');
+    state.levelBtns[nextLv].classList.add('cleared-anim');
+  }
+
+  // Mark cleared
+  state.levelBtns[state.level].classList.add('cleared');
+
+  const acc = state.keystrokes > 0
+    ? Math.round(((state.keystrokes - state.errors) / state.keystrokes) * 100)
+    : 100;
+
+  // Grade
+  let grade = 'D';
+  if (acc >= 98 && state.bestWpm >= 60) grade = 'S+';
+  else if (acc >= 95 && state.bestWpm >= 50) grade = 'S';
+  else if (acc >= 90 && state.bestWpm >= 40) grade = 'A+';
+  else if (acc >= 85) grade = 'A';
+  else if (acc >= 75) grade = 'B';
+  else if (acc >= 65) grade = 'C';
+
+  const xpGain = Math.round(state.level * 50 * (acc / 100));
+
+  document.getElementById('result-grade').textContent = grade;
+  document.getElementById('r-wpm').textContent = state.bestWpm;
+  document.getElementById('r-acc').textContent = acc + '%';
+  document.getElementById('r-combo').textContent = state.bestCombo;
+  document.getElementById('r-xp').textContent = '+' + xpGain;
+
+  document.getElementById('result-screen').classList.add('show');
+}
+
+function retryLevel() {
+  document.getElementById('result-screen').classList.remove('show');
+  resetRound();
+}
+
+function nextLevel() {
+  if (state.level >= 10) {
+    retryLevel();
+    return;
+  }
+  selectLevel(state.level + 1);
+  document.getElementById('result-screen').classList.remove('show');
+  resetRound();
+}
+</script>
+</body>
+</html>
